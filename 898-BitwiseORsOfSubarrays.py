@@ -45,6 +45,6 @@ class Solution(object):
         
         for a in A:
             curr = {a|xx for xx in curr}|{a}
-            res = res | curr
+            res |= curr                         #  res = res | curr doesn't pass
             
         return len(res)
