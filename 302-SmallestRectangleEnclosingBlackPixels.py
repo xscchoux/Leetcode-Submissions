@@ -8,7 +8,6 @@ class Solution(object):
         :rtype: int
         """
 # BFS
-
         row = len(image)
         col = len(image[0])
         queue = deque([])
