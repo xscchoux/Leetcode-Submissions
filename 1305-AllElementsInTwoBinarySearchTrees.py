@@ -12,7 +12,7 @@ class Solution(object):
         :type root2: TreeNode
         :rtype: List[int]
         """
-        
+# recursive
         def dfs(root, res):
             if not root:
                 return
@@ -35,3 +35,30 @@ class Solution(object):
                 j+=1
                 
         return ans+res1[i:]+res2[j:]
+
+# iterative
+
+        stack1, stack2 = [], []
+        res = []
+        
+        while True:
+            if root1 or root2:
+                while root1:
+                    stack1.append(root1)
+                    root1 = root1.left
+                while root2:
+                    stack2.append(root2)
+                    root2 = root2.left
+                
+            elif stack1 and stack2:
+                if stack1[-1] > stack2[-1]:
+                    root2 = stack2.pop()
+                    res.append(root2.val)
+                    root2 = root2.right
+                else:
+                    root1 = stack1.pop()
+                    res.append(root1.val)
+                    root1 = root1.right
+            else:
+                break
+            return res + stack1 + stack2
