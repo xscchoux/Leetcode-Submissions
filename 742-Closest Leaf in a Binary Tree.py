@@ -33,7 +33,7 @@ class Solution(object):
             size = len(queue)
             node = queue.popleft()
             if node:                    # note that there would be "None" nodes
-                if len(graph[node]) <= 1:  # note that root has a childNode "None"
+                if len(graph[node]) <= 1:  # note that root has a childNode "None", and all leaf node has only one neighbor
                     return node.val
                 for nei in graph[node]:
                     if nei not in seen:
