@@ -35,7 +35,7 @@ class Solution(object):
 # without memo
         def dfs(root):
             if not root:
-                return [0,0]
+                return [0,0]   #[max at this node, max without this node]
             
             leftRob, leftNoRob = dfs(root.left)
             rightRob, rightNoRob = dfs(root.right)
