@@ -5,6 +5,7 @@ class Solution(object):
         :type strs: List[str]
         :rtype: List[List[str]]
         """
+# time complexity: O(Nklogk)  N: length of strs, k: length of words
         hmap = defaultdict(list)
         for string in strs:
             stringList = list(string)
