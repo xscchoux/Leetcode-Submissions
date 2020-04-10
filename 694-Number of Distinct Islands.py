@@ -4,6 +4,7 @@ class Solution(object):
         :type grid: List[List[int]]
         :rtype: int
         """
+# Time complexity: O(mn)
         if not grid or not grid[0]:
             return 0
         row = len(grid)
