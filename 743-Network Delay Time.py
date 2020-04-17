@@ -7,6 +7,8 @@ class Solution(object):
         :type K: int
         :rtype: int
         """
+# Time: O(N^2 + ElogE (sort) )
+# Space: O(N + E), O(N) for stack in DFS
         dist= {node: float('inf') for node in range(1,N+1)}
         
         graph = defaultdict(list)
