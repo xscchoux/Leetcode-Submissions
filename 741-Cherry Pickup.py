@@ -4,6 +4,9 @@ class Solution(object):
         :type grid: List[List[int]]
         :rtype: int
         """
+# Time : O(n^3), Space: O(n^3)
+# dp[r1][c1][r2] = grid[r1][c1] + grid[r2][c2] + max(dp[r1-1][c1][r2],dp[r1][c1-1][r2],dp[r1-1][c1][r2-1],dp[r1][c1-1][r2])
+
         N = len(grid)
         dp = [[[None]*N for _1 in range(N)] for _2 in range(N)]
         
