@@ -4,6 +4,10 @@ class Solution(object):
         :type matrix: List[List[int]]
         :rtype: List[int]
         """
+
+# time complexity: O(MN)
+# space complexity: O(min(M,N))
+
         if not matrix or not matrix[0]:
             return []
         
