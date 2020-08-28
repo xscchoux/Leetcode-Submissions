@@ -1,5 +1,47 @@
 class Solution(object):
     def longestConsecutive(self, nums):
+
+# https://www.youtube.com/watch?v=rc2QdQ7U78I&t=456s
+# Sol 1:
+
+        hmap = dict()
+        for num in nums:
+            if num in hmap:
+                continue
+            left = hmap[num-1] if num-1 in hmap else 0
+            right = hmap[num+1] if num+1 in hmap else 0
+
+            if (left > 0 and right > 0):
+                hmap[num] = hmap[num-left] = hmap[num + right] = left + right + 1
+            elif left > 0:
+                hmap[num] = hmap[num - left] = left + 1
+            elif right > 0:
+                hmap[num] = hmap[num + right] = right + 1
+            else:
+                hmap[num] = 1
+        res = 0
+        for val in hmap.values():
+            res = max(res, val)
+
+        return res
+
+
+# Sol 2:
+        hset = set(nums)
+        res = 0
+        for num in nums:
+            if (num-1 not in hset):
+                l = 1
+                while (num+1 in hset):
+                    l += 1
+                    num += 1
+                res = max(res, l)
+        return res
+
+
+
+# old solutions
+
         """
         :type nums: List[int]
         :rtype: int
