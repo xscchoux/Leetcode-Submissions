@@ -3,6 +3,10 @@
  * @param {string} p
  * @return {boolean}
  */
+
+// DP
+// Time: O(SP), Space:O(SP)
+
 var isMatch = function(s, p) {
     let dp = Array.from(Array(s.length+1), () => new Array(p.length+1).fill(false));
     dp[0][0] = true;
@@ -22,4 +26,33 @@ var isMatch = function(s, p) {
         }
     }
     return dp[s.length][p.length];
+};
+
+
+// backtracking
+// Time: O(SP), Space:O(1)
+
+var isMatch = function(s, p) {
+    let i = 0, j = 0;
+    let star = -1, istar = 0;
+    
+    while (i < s.length){
+        if (j >= p.length || (p[j] !== '?' && p[j] !== '*' && s[i] !== p[j] )){
+            if (star === -1){
+                return false;
+            }else{
+                j = star + 1;
+                i = istar++;
+            }
+        }else if (p[j] === '*'){
+            star = j++;
+            istar = i;
+        }else{
+            i++; j++;
+        }
+    }
+    while (j < p.length){
+        if (p[j++] !== '*') return false;
+    }
+    return true;
 };
