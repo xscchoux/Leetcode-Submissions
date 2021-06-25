@@ -13,6 +13,35 @@ class Solution(object):
         :rtype: ListNode
         """
         
+# Recursive
+        self.leftHead = rightHead = head
+        self.stop = False
+        def recurse(rightHead, left, right):
+            if right == 1:
+                return
+            
+            rightHead = rightHead.next
+            
+            if left > 1:
+                self.leftHead = self.leftHead.next
+                
+            recurse(rightHead, left-1, right-1)
+            
+            if self.stop:
+                return
+            
+            if self.leftHead == rightHead or rightHead.next == self.leftHead:
+                self.stop = True
+                return
+            
+            self.leftHead.val, rightHead.val = rightHead.val, self.leftHead.val
+            self.leftHead = self.leftHead.next
+             
+        recurse(rightHead, left, right)
+        return head
+
+
+# Iterative
         dummyhead = ListNode(0)
         dummyhead.next = head
         first = dummyhead
