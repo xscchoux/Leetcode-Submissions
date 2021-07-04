@@ -10,19 +10,16 @@ class Solution(object):
         :type root: TreeNode
         :rtype: List[List[int]]
         """
-        memo = dict()
-        
-        def dfs(root):
-            if not root:
-                return 0
-            left = dfs(root.left)
-            right = dfs(root.right)
-            total = max(left, right) + 1
-            memo[total] = memo.get(total, []) + [root.val]
-            return total
-        
-        dfs(root)
         res = []
-        for key, val in memo.items():
-            res.append(val)
+        def dfs(node):
+            if not node:
+                return -1
+            leftH = dfs(node.left)
+            rightH = dfs(node.right)
+            h = max(leftH, rightH) + 1
+            if h == len(res):
+                res.append([])
+            res[h].append(node.val)
+            return h
+        dfs(root)
         return res
