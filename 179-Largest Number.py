@@ -1,4 +1,4 @@
-# Sol 1
+# # Sol 1
 from functools import cmp_to_key 
 class Solution(object):
     def largestNumber(self, nums):
@@ -18,6 +18,7 @@ class Solution(object):
         return "0" if nums[0] == "0" else "".join(nums)
 
 # Sol 2
+# sort uses the lt by default, if you don't override it, it will use the defaulted lt.
 class customCompare(str):
     def __lt__(a, b):
         return a+b > b+a
