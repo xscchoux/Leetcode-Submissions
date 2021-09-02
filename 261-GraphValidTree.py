@@ -1,4 +1,3 @@
-from collections import defaultdict, deque
 class Solution(object):
     def validTree(self, n, edges):
         """
@@ -6,31 +5,77 @@ class Solution(object):
         :type edges: List[List[int]]
         :rtype: bool
         """
-# Any connected graph without simple cycles is a tree.
-# Construct a graph and use BFS
+# DFS
+# check 
+# 1. If there's a cycle in the graph    2. If the graph is not a connected component
+        visited = [False]*n
+        graph = collections.defaultdict(list)
+        for start, end in edges:
+            graph[start].append(end)
+            graph[end].append(start)
+        
+        def dfs(curr, prev):
+            visited[curr] = True
+            for nxt in graph[curr]:
+                if nxt != prev:
+                    if visited[nxt]:
+                        return False
+                    if not dfs(nxt, curr):
+                        return False
+            return True
+        
+        if not dfs(0, -1):
+            return False
+        
+        for i in range(n):
+            if not visited[i]:
+                return False
+            
+        return True
+    
+# BFS
         if len(edges) != n-1:
             return False
+        
+        graph = collections.defaultdict(list)
+        for start, end in edges:
+            graph[start].append(end)
+            graph[end].append(start)
 
-        graph = defaultdict(list)
-        for e1, e2 in edges:
-            graph[e1].append(e2)
-            graph[e2].append(e1)
-            
+        queue = collections.deque([])
+        queue.append((0, None))
         visited = set()
-        queue = deque([])
-        queue.append((0,None))
         visited.add(0)
         
         while queue:
-            size = len(queue)
-            for _ in range(size):
-                curr, prev = queue.popleft()
-                for child in graph[curr]:
-                    if child == prev:
-                        continue
-                    if child not in visited:
-                        visited.add(child)
-                        queue.append((child, curr))
-                    else:
+            curr, prev = queue.popleft()
+            for nxt in graph[curr]:
+                if nxt != prev:
+                    if nxt in visited:
                         return False
-        return n == len(visited)
+                    else:
+                        visited.add(nxt)
+                        queue.append((nxt, curr))
+                        
+        return len(visited) == n
+        
+# Union-Find
+        if len(edges) != n-1:
+            return False
+        
+        parent = {i:i for i in range(n)}
+    
+        def find(node):
+            if node == parent[node]:
+                return node
+            else:
+                parent[node] = find(parent[node])
+                return parent[node]
+        
+        for u, v in edges:
+            parentU, parentV = find(u), find(v)
+            if parentU == parentV:
+                return False
+            parent[parentU] = parentV
+        
+        return True
