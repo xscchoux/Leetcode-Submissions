@@ -11,21 +11,44 @@ class Solution(object):
         :type key: int
         :rtype: TreeNode
         """
-        if not root:     # the key is not in BST
-            return None
-        
-        if key > root.val:
-            root.right = self.deleteNode(root.right, key)
-        elif key < root.val:
-            root.left = self.deleteNode(root.left, key)
-        else:
-            if not (root.right and root.left):
-                root = root.left or root.right
+# change the value of the "deleted node"
+        def traverse(node, key):
+            if not node:
+                return None
+            if node.val < key:
+                node.right = traverse(node.right, key)
+            elif node.val > key:
+                node.left = traverse(node.left, key)
             else:
-                nextLargest = root.right
-                while nextLargest.left:
-                    nextLargest = nextLargest.left
-                root.val = nextLargest.val
-                root.right = self.deleteNode(root.right, root.val)
+                if not node.left or not node.right:
+                    node = node.left or node.right
+                else:
+                    _min = node.right
+                    while _min.left:
+                        _min = _min.left
+                    node.val = _min.val
+                    node.right = traverse(node.right, _min.val)
+            return node
         
-        return root
+        return traverse(root, key)
+    
+# solution 2
+        def traverse(node, key):
+            if not node:
+                return None
+            if node.val < key:
+                node.right = traverse(node.right, key)
+            elif node.val > key:
+                node.left = traverse(node.left, key)
+            else:
+                if not node.left or not node.right:
+                    node = node.left or node.right
+                else:
+                    _min = node.right
+                    while _min.left:
+                        _min = _min.left
+                    _min.left = node.left
+                    node = node.right
+            return node
+        
+        return traverse(root, key)
