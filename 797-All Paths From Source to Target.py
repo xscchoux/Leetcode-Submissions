@@ -5,6 +5,7 @@ class Solution(object):
         :type graph: List[List[int]]
         :rtype: List[List[int]]
         """
+	# O(N*2^N)
         dag = defaultdict(list)
         
         for i in range(len(graph)):
