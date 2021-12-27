@@ -1,2 +1,2 @@
 # Leetcode-Submissions
-My leetcode submissions in Python, JavaScript and Java
+My leetcode submissions, mainly in Python and JavaScript
