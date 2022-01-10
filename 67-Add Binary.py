@@ -28,3 +28,20 @@ class Solution(object):
             res = "1" + res
         
         return res
+
+
+# sol2
+class Solution(object):
+    def addBinary(self, a, b):
+        """
+        :type a: str
+        :type b: str
+        :rtype: str
+        """
+        a = int(a, 2)
+        b = int(b, 2)
+        
+        while b:
+            a, b = a^b, (a&b)<<1
+            
+        return bin(a)[2:]
