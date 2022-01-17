@@ -1,0 +1,32 @@
+class Solution(object):
+    def maxRunTime(self, n, batteries):
+        """
+        :type n: int
+        :type batteries: List[int]
+        :rtype: int
+        """
+        left, right = min(batteries), sum(batteries)//n
+
+        def checkOK(targetTime):
+            totTime = 0
+            totTarget = n*targetTime
+            for battery in batteries:
+                if battery > targetTime:
+                    totTime += targetTime
+                else:
+                    totTime += battery
+                if totTime >= totTarget:
+                    return True
+            return False
+        
+        while left + 1 < right:
+            mid = left + (right-left)//2
+            if checkOK(mid):
+                left = mid
+            else:
+                right = mid
+        
+        if checkOK(right):
+            return right
+        else:
+            return left
