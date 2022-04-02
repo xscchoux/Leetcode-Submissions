@@ -41,3 +41,27 @@ class Solution(object):
             return left
         else:
             return right
+
+
+# Solution2:
+# class Solution:
+#     def splitArray(self, nums: List[int], m: int) -> int:
+        
+#         preSum = [0]
+#         for num in nums:
+#             preSum.append(preSum[-1] + num)
+        
+#         @cache
+#         def dp(ind, m):
+#             if m == 1:
+#                 return preSum[ind+1]
+            
+#             res = preSum[-1]
+#             for currLen in range(1, ind+3-m):
+#                 right, left = preSum[ind+1]-preSum[ind+1-currLen], dp(ind-currLen, m-1)
+#                 res = min(res, max(left, right))
+#                 if right > left:
+#                     break
+#             return res
+        
+#         return dp(len(nums)-1, m)
