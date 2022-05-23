@@ -23,4 +23,26 @@ class Solution(object):
                 for j in range(n, ones-1, -1):
                     dp[i][j] = max(dp[i][j], dp[i-zeros][j-ones]+1)
 
-        return dp[-1][-1] 
+        return dp[-1][-1]
+
+
+# solution2, dfs+memoization
+
+class Solution:
+    def findMaxForm(self, strs: List[str], m: int, n: int) -> int:
+        count = [(c.count("0"), c.count("1")) for c in strs]
+        
+        @cache
+        def dfs(remainM, remainN, ind):
+            if ind == len(strs):
+                return 0
+            
+            minusM, minusN = count[ind]
+            if remainM - minusM >= 0 and remainN - minusN >= 0:
+                res = max( 1+ dfs(remainM-minusM, remainN-minusN, ind+1), dfs(remainM, remainN, ind+1) )
+            else:
+                res = dfs(remainM, remainN, ind+1)
+            
+            return res
+        
+        return dfs(m, n, 0)
