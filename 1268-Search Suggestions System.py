@@ -47,3 +47,23 @@ class Solution(object):
 # O(k*nlogn)
         res = trie.search(searchWord)
         return res
+
+
+# Solution 2
+class Solution(object):
+    def suggestedProducts(self, products, searchWord):
+        """
+        :type products: List[str]
+        :type searchWord: str
+        :rtype: List[List[str]]
+        """
+        products.sort()
+        res = []
+        
+        prefix = ""
+        for w in searchWord:
+            prefix += w
+            idx = bisect.bisect_left(products, prefix)
+            res.append([ word for word in products[idx:idx+3] if word.startswith(prefix)])
+        
+        return res
