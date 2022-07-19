@@ -66,3 +66,34 @@ class Solution(object):
             return ans
                 
         return dp((1<<N)-1, sideLen, 0)
+
+
+
+# Python3
+
+class Solution:
+    def makesquare(self, matchsticks: List[int]) -> bool:
+        matchsticks.sort(reverse = True)
+        tot = sum(matchsticks)
+        side = tot//4
+        if tot%4 != 0:
+            return False
+        if matchsticks[0] > side:
+            return False
+        
+        @cache
+        def dfs(bitmap, full, remain):
+            if full == 4:
+                return True
+            
+            for i in range(len(matchsticks)):
+                if (bitmap >> i) & 1:
+                    if remain > matchsticks[i]:
+                        if dfs(bitmap^(1<<i), full, remain-matchsticks[i]):
+                            return True
+                    elif remain == matchsticks[i]:
+                        if dfs(bitmap^(1<<i), full+1, side):
+                            return True
+            return False
+            
+        return dfs((1<<len(matchsticks)) - 1, 0, side)
