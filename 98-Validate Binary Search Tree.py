@@ -1,28 +1,42 @@
 # Definition for a binary tree node.
 # class TreeNode(object):
-#     def __init__(self, x):
-#         self.val = x
-#         self.left = None
-#         self.right = None
-
+#     def __init__(self, val=0, left=None, right=None):
+#         self.val = val
+#         self.left = left
+#         self.right = right
 class Solution(object):
     def isValidBST(self, root):
         """
         :type root: TreeNode
         :rtype: bool
         """
-# O(n)
-        _min = float('-inf')
-        _max = float('inf')
+# iterative
+        stack, prev = [], float('-inf')
+        while True:
+            if root:
+                stack.append(root)
+                root = root.left
+            elif stack:
+                root = stack.pop()
+                if root.val <= prev:
+                    return False
+                prev = root.val
+                root = root.right
+            else:
+                break
         
-        def dfs(root, _min, _max):
-            if not root:
+        return True
+        
+# Recursive        
+        def dfs(node, mx, mn):
+            if not node:
                 return True
-            if _min < root.val < _max:
-                left = dfs(root.left, _min, root.val)
-                right = dfs(root.right, root.val, _max)
+            if mn < node.val and node.val < mx:
+                left = dfs(node.left, node.val, mn)
+                right = dfs(node.right, mx, node.val)
+                
                 return left and right
             else:
                 return False
         
-        return dfs(root, _min, _max)
+        return dfs(root, float('inf'), float('-inf'))
