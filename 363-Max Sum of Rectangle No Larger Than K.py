@@ -26,3 +26,34 @@ class Solution(object):
                         return k
                     bisect.insort(slist, tot)
         return res
+
+
+# using SortedList
+
+from sortedcontainers import SortedList
+class Solution(object):
+    def maxSumSubmatrix(self, matrix, k):
+        """
+        :type matrix: List[List[int]]
+        :type k: int
+        :rtype: int
+        """
+        row, col = len(matrix), len(matrix[0])
+        res = float('-inf')
+        
+        for r in range(row):
+            dp = [0]*col
+            for r1 in range(r, row):
+                tot, slist = 0, SortedList()
+                for c in range(col):
+                    dp[c] += matrix[r1][c]
+                    tot += dp[c]
+                    if tot <= k:
+                        res = max(res, tot)
+                    index = slist.bisect_left(tot-k)
+                    if index != len(slist):
+                        res = max(res, tot-slist[index])
+                    if res == k:
+                        return res
+                    slist.add(tot)
+        return res
