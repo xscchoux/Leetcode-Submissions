@@ -35,3 +35,28 @@ class Solution(object):
                         res.append([wordDict[word], wordDict[revLeft]])
         
         return res
+
+
+# better
+        res = []
+        hmap = dict()
+        for i, word in enumerate(words):
+            hmap[word[::-1]] = i
+        
+        def isPalidrome(s):
+            left, right = 0, len(s)-1
+            while left<right:
+                if s[left] != s[right]:
+                    return False
+                left += 1
+                right -= 1
+            return True        
+        
+        for ind, word in enumerate(words):
+            for i in range(len(word)+1):
+                left, right = word[:i], word[i:]
+                if left in hmap and ind != hmap[left] and isPalidrome(right):
+                    res.append([ind, hmap[left]])
+                if i!=0 and right in hmap and ind != hmap[right] and isPalidrome(left):
+                    res.append([hmap[right], ind])
+        return res
