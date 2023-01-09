@@ -27,3 +27,21 @@ class Solution(object):
             if root.left:
                 stack.append(root.left)
         return res
+
+# second visit
+
+        res = []
+        stack = []
+        
+        while True:
+            if root:
+                res.append(root.val)
+                stack.append(root)
+                root = root.left
+            elif stack:
+                root = stack.pop()
+                root = root.right
+            else:
+                break
+                
+        return res
