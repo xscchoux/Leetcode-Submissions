@@ -1,26 +1,42 @@
-from bisect import bisect_left
-class Solution(object):
-    def shortestWay(self, source, target):
-        """
-        :type source: str
-        :type target: str
-        :rtype: int
-        """
-        hmap = collections.defaultdict(list)
+class Solution:
+    def shortestWay(self, source: str, target: str) -> int:
         
+# dictionary + binary search
+        hmap = collections.defaultdict(list)
         for i, c in enumerate(source):
             hmap[c].append(i)
         
-        j = 0 # index in source
-        res = 0
+        count = 1 # number of times we need to iterate through source
+        ind = 0 # index of source
         
         for char in target:
             if char not in hmap:
                 return -1
-            idx = bisect_left(hmap[char], j)
-            if idx == len(hmap[char]):
-                res += 1
-                idx = 0
-            j = hmap[char][idx] + 1
+            currIdx = bisect_left(hmap[char], ind)
+            if currIdx == len(hmap[char]):
+                count += 1
+                currIdx = 0
+            ind = hmap[char][currIdx] + 1
             
-        return res+1
+        return count
+    
+# DP, store the index of c in source ahead of (or including) sourceIterator, O(26*N)
+        Nsource= len(source)
+        next_occurence = [defaultdict(int) for _ in range(Nsource)]
+        next_occurence[Nsource-1][source[Nsource-1]] = Nsource-1
+        
+        for i in range(Nsource-2, -1, -1):
+            next_occurence[i] = next_occurence[i+1].copy()
+            next_occurence[i][source[i]] = i
+        
+        count = 1
+        ind = 0 # sourceIterator
+        for char in target:
+            if char not in next_occurence[0]:
+                return -1
+            if ind == Nsource or char not in next_occurence[ind]:
+                ind = 0
+                count += 1
+            ind = next_occurence[ind][char] + 1
+            
+        return count
