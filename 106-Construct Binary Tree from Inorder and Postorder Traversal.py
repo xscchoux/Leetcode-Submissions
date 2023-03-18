@@ -29,3 +29,21 @@ class Solution(object):
             return root
         
         return dfs(0, N-1, 0, N-1)
+
+# better way
+
+        hmap = {val: ind for ind, val in enumerate(inorder)}
+            
+        def dfs(start, end):
+            if start > end:
+                return None
+            rootVal = postorder.pop()
+            root = TreeNode(rootVal)
+            
+            Idx = hmap[rootVal]
+            root.right = dfs(Idx+1, end)
+            root.left = dfs(start, Idx-1)
+            
+            return root
+        
+        return dfs(0, len(inorder)-1)
