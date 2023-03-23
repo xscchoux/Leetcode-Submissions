@@ -1,34 +1,23 @@
-class Solution(object):
-    def makeConnected(self, n, connections):
-        """
-        :type n: int
-        :type connections: List[List[int]]
-        :rtype: int
-        """
-        if len(connections) < n - 1:
+class Solution:
+    def makeConnected(self, n: int, connections: List[List[int]]) -> int:
+        if n - 1 > len(connections):
             return -1
         
-        self.parent = {i:i for i in range(n)}
-        self.nCC = n
-        canMove = 0
-        for p1, p2 in connections:
-            canMove += self.union(p1,p2)
-        return -1 if self.nCC-1 > canMove else self.nCC-1
-    
-    def union(self, pa, pb):
-        ra = self.find(pa)
-        rb = self.find(pb)
-        if ra != rb:
-            self.parent[ra] = rb
-            self.nCC-=1
-            return 0
-        return 1
+        parent = {i:i for i in range(n)}
+        
+        def find(x):
+            if parent[x] != x:
+                parent[x] = find(parent[x])
+            return parent[x]
+        
+        def union(a, b):
+            nonlocal n
+            pa, pb = find(a), find(b)
+            if pa != pb:
+                n -= 1
+                parent[pa] = pb
             
-    def find(self, point):
-        path = []
-        while point != self.parent[point]:
-            path.append(point)
-            point = self.parent[point]
-        for p in path:
-            self.parent[p] = point
-        return point
+        for u, v in connections:
+            union(u, v)
+            
+        return n - 1
