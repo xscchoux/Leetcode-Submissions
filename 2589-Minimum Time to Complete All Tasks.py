@@ -1,3 +1,32 @@
+# greedy 
+class Solution:
+    def findMinimumTime(self, tasks: List[List[int]]) -> int:
+        tasks.sort(key = lambda x:x[1])
+        
+        used = [False]*2001
+        
+        for start, end, duration in tasks:
+            count = 0
+            for i in range(end, start-1, -1):
+                if used[i]:
+                    count += 1
+            
+            ind = end
+            while count < duration:
+                if not used[ind]:
+                    used[ind] = True
+                    count += 1
+                ind -= 1
+        
+        res = 0
+        for i in range(len(used)):
+            if used[i]:
+                res += 1
+        
+        return res
+    
+    
+# Use BIT
 class BIT:
     def __init__(self, n):
         self.n = n
@@ -11,14 +40,13 @@ class BIT:
     def query(self, i):
         result = 0
         while i > 0:
-            print(i)
             result += self.bit[i]
             i -= i & (-i)
         return result
 
 class Solution:
     def findMinimumTime(self, tasks: List[List[int]]) -> int:
-        arr = BIT(2000)
+        arr = BIT(2001)
         tasks.sort(key = lambda x:x[1])
         visited = [False]*(2001)
         
