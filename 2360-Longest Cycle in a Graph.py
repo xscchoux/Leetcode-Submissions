@@ -23,6 +23,32 @@ class Solution(object):
             dfs(i, 0)
 
         return self.res
+
+
+# DFS2
+
+        N = len(edges)
+        visited = [False]*N
+        self.res = -1
+        
+        def dfs(node, memo):
+            if not visited[node]:
+                nxt = edges[node]
+                if nxt != -1:
+                    if nxt in memo:
+                        self.res = max(self.res, memo[node] - memo[nxt]+1)
+                    else:
+                        memo[nxt] = memo[node] + 1
+                        dfs(nxt, memo)
+                    visited[node] = True
+
+        for i in range(N):
+            memo = dict()
+            memo[i] = 0
+            dfs(i, memo)
+
+        return self.res
+
     
 # Iterative
         
