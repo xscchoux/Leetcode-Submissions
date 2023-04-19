@@ -28,3 +28,31 @@ class Solution(object):
         dfs(root.right, "r", 1)
         
         return self.res
+
+
+# BFS
+class Solution:
+    def longestZigZag(self, root: Optional[TreeNode]) -> int:
+        res = 0
+        queue = deque([])
+        queue.append((root, "left", 0))
+        queue.append((root, "right", 0))
+        
+        while queue:
+            for _ in range(len(queue)):
+                curr, direction, length = queue.popleft() # direction: direction came from
+                res = max(res, length)
+                
+                if curr.right:
+                    if direction == "left":
+                        queue.append((curr.right, "right", length+1))
+                    else:
+                        queue.append((curr.right, "right", 1))
+                
+                if curr.left:
+                    if direction == "right":
+                        queue.append((curr.left, "left", length+1))
+                    else:
+                        queue.append((curr.left, "left", 1))
+                        
+        return res
