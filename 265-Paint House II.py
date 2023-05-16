@@ -4,6 +4,8 @@ class Solution(object):
         :type costs: List[List[int]]
         :rtype: int
         """
+
+# O(n*colors)
         n = len(costs)
         colors = len(costs[0])
         
@@ -26,3 +28,45 @@ class Solution(object):
                     costs[house][k] += costs[house-1][min1Color]
         
         return min(costs[-1])
+
+# O(n*colors), optimized space
+
+# optimized space
+        N = len(costs)
+        colors = len(costs[0])
+        
+        prevMinIdx = -1
+        prevFirstMin = prevSecondMin = float('inf')
+        
+        for color in range(colors):
+            if costs[0][color] < prevFirstMin:
+                prevSecondMin = prevFirstMin
+                prevFirstMin = costs[0][color]
+                prevMinIdx = color
+            elif costs[0][color] < prevSecondMin:
+                prevSecondMin = costs[0][color]
+        
+        for i in range(1, N):
+            firstMin = secondMin = float('inf')
+            minIdx = -1
+            
+            for color in range(colors):
+                cost = costs[i][color]
+                if color == prevMinIdx:
+                    cost += prevSecondMin
+                else:
+                    cost += prevFirstMin
+                
+                if cost < firstMin:
+                    minIdx = color
+                    secondMin = firstMin
+                    firstMin = cost
+                    
+                elif cost < secondMin:
+                    secondMin = cost
+            
+            prevMinIdx = minIdx
+            prevFirstMin = firstMin
+            prevSecondMin = secondMin
+        
+        return prevFirstMin
