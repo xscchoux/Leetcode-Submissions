@@ -15,3 +15,22 @@ class Solution(object):
                             res[i][j] += mat1[i][k]*mat2[k][j]
         
         return res
+
+
+# sol2
+        hmap = defaultdict(int)
+        
+        for r in range(len(mat1)):
+            for c in range(len(mat1[0])):
+                if mat1[r][c]:
+                    hmap[(r, c)] = mat1[r][c]
+
+        res = [[0]*len(mat2[0]) for _ in range(len(mat1))]
+        
+        for k, v in hmap.items():
+            r, c = k
+            for c2 in range(len(mat2[0])):
+                if mat2[c][c2]:
+                    res[r][c2] += mat1[r][c]*mat2[c][c2]
+        
+        return res
