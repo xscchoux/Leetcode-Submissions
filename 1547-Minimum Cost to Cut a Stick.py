@@ -1,27 +1,38 @@
-class Solution(object):
-    def minCost(self, n, cuts):
-        """
-        :type n: int
-        :type cuts: List[int]
-        :rtype: int
-        """
+class Solution:
+    def minCost(self, n: int, cuts: List[int]) -> int:
+
+# Cannot greedily pick the shortest span, for example
+# n = 36
+# cuts = [13,22,27] -> span = [13, 9, 5, 9]
+# pick [9, 5] and pick [5, 9] first will give different results
+
+# DFS + memoization
+        cuts = [0] + sorted(cuts) + [n]
         
-# Top-down, O(N^3)
-        cuts = [0] + cuts + [n]
-        cuts.sort()
-        N = len(cuts) - 1
-        memo = dict()
-        
-        def dfs(startIdx, endIdx):
-            if startIdx + 1 == endIdx:
+        @cache
+        def dfs(start, end):
+            if start + 1 >= end:
                 return 0
-            if (startIdx, endIdx) in memo:
-                return memo[(startIdx, endIdx)]
-            res = float('inf')
-            for i in range(startIdx+1, endIdx):
-                res = min(res, dfs(startIdx, i) + dfs(i, endIdx) + cuts[endIdx] - cuts[startIdx] )
-            memo[(startIdx, endIdx)] = res
-            return res
+            
+            mn = float('inf')
+            for i in range(start+1, end):
+                mn = min(mn, dfs(start, i) + dfs(i, end) + cuts[end] - cuts[start])  
+            return mn
         
-        res = dfs(0, N)
-        return res
+        return dfs(0, len(cuts)-1)
+    
+# bottom-up DP
+        cuts = [0] + sorted(cuts) + [n]
+        N = len(cuts)
+        dp = [[0]*N for _ in range(N)]
+        
+        for idxDiff in range(2, N):
+            for start in range(N-1):
+                end = start + idxDiff
+                if end > N-1:
+                    break
+                dp[start][end] = float('inf')
+                for k in range(start+1, end):
+                    dp[start][end] = min(dp[start][end], dp[start][k] + dp[k][end] + cuts[end] - cuts[start])
+        
+        return dp[0][N-1]
