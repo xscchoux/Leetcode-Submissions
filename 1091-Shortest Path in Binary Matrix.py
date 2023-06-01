@@ -1,32 +1,24 @@
-from collections import deque
-class Solution(object):
-    def shortestPathBinaryMatrix(self, grid):
-        """
-        :type grid: List[List[int]]
-        :rtype: int
-        """
-
-        if grid[0][0] == 1:
+class Solution:
+    def shortestPathBinaryMatrix(self, grid: List[List[int]]) -> int:
+        N = len(grid)
+        if grid[0][0] or grid[N-1][N-1]:
             return -1
-        
-        queue = deque([])
-        queue.append((0,0,1))
-        
-        row = len(grid)
-        col = len(grid[0])
-        visited = set()
-        visited.add((0,0))
+
+        queue = deque([(0, 0)])
+        directions = [(1, 0), (1, -1), (1, 1), (0, 1), (0, -1), (-1, 0), (-1, -1), (-1, 1)]
+        step = 1
+        grid[0][0] = 1
         
         while queue:
-            size = len(queue)
-            for _ in range(size):
-                r, c, step = queue.popleft()
-                if r == row-1 and c == col-1:
+            for _ in range(len(queue)):
+                currR, currC = queue.popleft()
+                if currR == N-1 and currC == N-1:
                     return step
-                for dr, dc in ((1,0),(0,1),(0,-1),(-1,0),(1,1),(1,-1),(-1,1),(-1,-1)):
-                    newR = r + dr
-                    newC = c + dc
-                    if 0<=newR<row and 0<=newC<col and (newR,newC) not in visited and grid[newR][newC] == 0:
-                        visited.add((newR,newC))
-                        queue.append((newR, newC, step+1))
+                for dr, dc in directions:
+                    nxtR, nxtC = currR+dr, currC+dc
+                    if 0<=nxtR<N and 0<=nxtC<N and grid[nxtR][nxtC] == 0:
+                        grid[nxtR][nxtC] = 1
+                        queue.append((nxtR, nxtC))
+            step += 1
+        
         return -1
