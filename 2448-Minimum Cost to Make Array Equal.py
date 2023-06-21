@@ -30,6 +30,8 @@ class Solution(object):
         return res
     
 # solution2, get median
+# get the median where sig(xi - median) is miminum. We have the number of xi is cost[i]
+
         arr = []
         for i in range(len(nums)):
             arr.append((nums[i], cost[i]))
@@ -49,3 +51,29 @@ class Solution(object):
             res += abs(nums[i] - arr[k][0])*cost[i]
             
         return res
+    
+# convex function
+
+        # A convex function is one that satisfies for  0≤λ≤1
+        # f(λx+(1−λ)x) ≤ λf(x)+(1−λ)f(x)
+        # So, h=f+g where f and g are convex satisfies
+        # h(λx+(1−λ)x)=f(λx+(1−λ)x)+g(λx+(1−λ)x)≤λ(f(x)+g(x))+(1−λ)(f(x)+g(x))
+        
+        def cal(target):
+            return sum(abs(x-target)*c for x, c in zip(nums, cost))
+        
+        left, right = min(nums), max(nums)
+        res = cal(nums[0])
+        
+        while left + 1 < right:
+            mid = left + (right-left)//2
+            cost_right = cal(mid+1)
+            cost_left = cal(mid)
+            res = min(cost_right, cost_left)
+            
+            if cost_right > cost_left:
+                right = mid
+            else:
+                left = mid + 1
+
+        return min(cal(left), cal(right))
