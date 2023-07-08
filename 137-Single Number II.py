@@ -14,3 +14,12 @@ class Solution(object):
             one = one&(~three)
         
         return one
+
+# solution 2, check solution in Leetcode
+
+        once = twice = 0
+        for num in nums:
+            once = (once^num) & (~twice)
+            twice = (twice^num) & (~once)
+        
+        return once
