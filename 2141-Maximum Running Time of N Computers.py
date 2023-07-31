@@ -30,3 +30,18 @@ class Solution(object):
             return right
         else:
             return left
+
+# Sol 2
+
+        batteries.sort()
+        arr = batteries[len(batteries)-n:]
+        excess = sum(batteries[:len(batteries)-n])
+        
+        for i in range(1, len(arr)):
+            diff = arr[i] - arr[i-1]
+            if excess >= diff*i:
+                excess -= diff*i
+            else:
+                return arr[i-1] + excess//i
+        
+        return arr[-1] + excess//n
