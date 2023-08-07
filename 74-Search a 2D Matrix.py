@@ -17,3 +17,24 @@ class Solution(object):
                 currC += 1
         
         return False
+
+
+# binary search
+
+        m, n = len(matrix), len(matrix[0])
+        
+        left, right = 0, m*n-1
+        
+        while left + 1 < right:
+            mid = left + (right-left)//2
+            if matrix[mid//n][mid%n] < target:
+                left = mid
+            else:
+                right = mid
+                
+        if matrix[left//n][left%n] == target:
+            return True
+        elif matrix[right//n][right%n] == target:
+            return True
+        else:
+            return False
