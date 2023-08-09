@@ -42,3 +42,31 @@ class Solution(object):
         if nums[right] < nums[left]:
             return right
         return left
+
+
+# another solution
+
+class Solution:
+    def search(self, nums: List[int], target: int) -> int:
+        N = len(nums)
+        left, right = 0, N-1
+        
+        while left + 1 < right:
+            mid = left + (right-left)//2
+            if nums[mid] <= nums[right]:  # RHS in ascending order
+                if nums[mid] <= target <= nums[right]:
+                    left = mid
+                else:
+                    right = mid
+            else:                         # LHS in ascending order
+                if nums[left] <= target <= nums[mid]:
+                    right = mid
+                else:
+                    left = mid
+        
+        if nums[left] == target:
+            return left
+        elif nums[right] == target:
+            return right
+        else:
+            return -1
