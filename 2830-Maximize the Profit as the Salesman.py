@@ -11,7 +11,7 @@ class Solution:
                 if offers[idx][1] < i-1:
                     idx += 1
                 else:
-                    dp[i] = max(dp[i], offers[idx][2] + dp[i-(offers[idx][1]-offers[idx][0]+1)])
+                    dp[i] = max(dp[i], offers[idx][2] + dp[offers[idx][0]])
                     idx += 1
 
         return dp[-1]
@@ -30,3 +30,4 @@ class Solution:
                 dp[i] = max(dp[i], dp[s] + w)
 
         return dp[-1]
+            
