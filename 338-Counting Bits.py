@@ -13,3 +13,18 @@ class Solution(object):
                 res[i] = res[i-1] + 1
                 
         return res
+
+
+# DP + Least Significant Bit
+        res = [0]*(n+1)
+        for num in range(1, n+1):
+            res[num] = res[num//2] + (num&1)
+        
+        return res
+    
+# DP + Last Set Bit
+        res = [0]*(n+1)
+        for num in range(1, n+1):
+            res[num] = res[num&(num-1)] + 1
+        
+        return res
