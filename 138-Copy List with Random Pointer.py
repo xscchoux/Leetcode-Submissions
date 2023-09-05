@@ -55,3 +55,26 @@ class Solution(object):
             return copyNode
         
         return recurse(head)
+
+# iterative solution
+        hmap = dict()
+        
+        def getNode(node):
+            if not node:
+                return None
+            if node in hmap:
+                return hmap[node]
+            newNode = Node(node.val)
+            hmap[node] = newNode
+            return newNode
+        
+        headNode = head
+        copyNode = getNode(head)
+        
+        while head:
+            copyNode.next = getNode(head.next)
+            copyNode.random = getNode(head.random)
+            copyNode = copyNode.next
+            head = head.next
+            
+        return getNode(headNode)
