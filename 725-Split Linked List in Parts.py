@@ -29,3 +29,29 @@ class Solution(object):
                 tmp = tmp.next
             res.append(head.next)
         return res
+
+
+# Without creating new linked-lists
+        count = 0
+        curr = head
+        while curr:
+            count += 1
+            curr = curr.next
+        
+        q, r = divmod(count, k)
+        res = []
+        curr = head
+        
+        for i in range(k):
+            if not curr:
+                res.append(None)
+                continue
+            h = curr
+            for step in range(q + (i < r) -1):
+                curr = curr.next
+            tmp = curr.next
+            curr.next = None
+            curr = tmp
+            res.append(h)
+        
+        return res
