@@ -1,33 +1,55 @@
-from collections import defaultdict
-class Solution(object):
-    def findItinerary(self, tickets):
-        """
-        :type tickets: List[List[str]]
-        :rtype: List[str]
-        """
-        graph = defaultdict(list)
-        tickets.sort()
-        self.visited = defaultdict(list)
-        self.flights = len(tickets)
+class Solution:
+    def findItinerary(self, tickets: List[List[str]]) -> List[str]:
         
-        for start, end in tickets:
-            graph[start].append(end)
-            self.visited[start].append(False)
+# backtracking, very hard to estimate its time complexity
+        usedPath = set()
+        tickets.sort()
+        graph = defaultdict(list)
         res = []
         
-        def backtracking(start, path):
-            if len(path) == self.flights + 1:
-                res[:] = path
-                return True
-            for ind, nxt in enumerate(graph[start]):
-                if not self.visited[start][ind]:
-                    self.visited[start][ind] = True
-                    if backtracking(nxt, path+[nxt]):
-                        return True
-                    self.visited[start][ind] = False
+        for i, (u, v) in enumerate(tickets):
+            graph[u].append((v, i))
 
+        self.res = []
+
+        def dfs(curr, path):
+            if len(usedPath) == len(tickets):
+                self.res = path
+                return True
+            for nxt, idx in graph[curr]:
+                if (curr, nxt, idx) in usedPath:
+                    continue
+                usedPath.add((curr, nxt, idx))
+                if dfs(nxt, path + [nxt]):
+                    return True
+                usedPath.remove((curr, nxt, idx))
+                
             return False
+            
+        dfs("JFK", ["JFK"])
+
+        return self.res
+
+
+# Eulerian path
+# Hierholzer's Algorithm
+
+        graph = defaultdict(list)
+        for u, v in tickets:
+            graph[u].append(v)
         
-        backtracking("JFK", ["JFK"])
+        for u, v in graph.items():
+            graph[u] = sorted(v, reverse=True)
+            
+        self.res = []
         
-        return res
+        def dfs(curr):
+            arr = graph[curr]
+            while arr:
+                nxt = arr.pop()
+                dfs(nxt)
+            self.res.append(curr)
+        
+        dfs("JFK")
+        
+        return self.res[::-1]
