@@ -31,3 +31,34 @@ class Solution(object):
                 right = partitionNum1
             else:
                 left = partitionNum1
+
+
+
+class Solution:
+    def findMedianSortedArrays(self, nums1: List[int], nums2: List[int]) -> float:
+# Recursive binary search
+# https://github.com/wisdompeak/LeetCode/blob/master/Priority_Queue/004.Median-of-Two-Sorted-Arrays/4-Median-of-Two-Sorted-Arrays.cpp
+        N1, N2 = len(nums1), len(nums2)
+        
+        def findKth(start1, nums1, start2, nums2, k):
+            l1, l2 = len(nums1)-start1, len(nums2)-start2
+
+            if l1 > l2:
+                return findKth(start2, nums2, start1, nums1, k)
+            
+            if start1 == len(nums1):
+                return nums2[start2+k-1]
+            
+            if k == 1:
+                return min(nums1[start1], nums2[start2])
+            
+            k1 = min(k//2, l1)
+            k2 = k - k1
+
+            if nums1[start1+k1-1] < nums2[start2+k2-1]:
+                return findKth(start1+k1, nums1, start2, nums2, k-k1)
+            return findKth(start1, nums1, start2+k2, nums2, k-k2)
+        
+        if (N1+N2)%2 == 0:
+            return (findKth(0, nums1, 0, nums2, (N1+N2)//2) + findKth(0, nums1, 0, nums2, (N1+N2)//2+1 ))/2
+        return findKth(0, nums1, 0, nums2, (N1+N2+1)//2 )
