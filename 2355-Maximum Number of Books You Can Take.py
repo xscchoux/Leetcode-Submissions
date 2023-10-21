@@ -38,3 +38,31 @@ class Solution(object):
                 # Or we can simply set j = -1 when stack is empty
             stack.append(i)
         return max(dp)
+
+
+# Second visited
+
+        # dp[i] : maximum number of books you can take from 0 to i
+        # if books[j] < books[i] - (i-j) => books[j] - j < books[i] - i, dp[i] = dp[j] + calculateSum(j+1, i)
+        
+        N = len(books)
+        dp = [0]*N
+        stack = []
+        
+        def calculateSum(start, end):
+            count = min(books[end], end-start+1)
+            return (books[end] + (books[end]-count+1))*count//2
+        
+        for i in range(N):
+            while stack and books[stack[-1]] - stack[-1] >= books[i] - i:
+                stack.pop()
+            
+            if not stack:
+                dp[i] = calculateSum(0, i)
+            else:
+                j = stack[-1]
+                dp[i] = dp[j] + calculateSum(j+1, i)
+        
+            stack.append(i)
+            
+        return max(dp)
