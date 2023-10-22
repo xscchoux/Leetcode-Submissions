@@ -30,3 +30,44 @@ class Solution(object):
                         return root
                     visited.add(curr.left.val)
                     queue.append(curr.left)
+
+# DFS solution
+
+# Note that setting node = None in a function doesn't work
+# In Python, when you pass an object to a function, you are passing a reference to the object. 
+# However, when you assign a new value to the variable (like node = None), 
+# you are only changing the local variable within the function scope, not the actual object outside the function.
+
+# Definition for a binary tree node.
+# class TreeNode:
+#     def __init__(self, val=0, left=None, right=None):
+#         self.val = val
+#         self.left = left
+#         self.right = right
+class Solution:
+    def correctBinaryTree(self, root: TreeNode) -> TreeNode:
+        
+        visited = set()
+        
+        def dfs(node):
+            if not node:
+                return
+            
+            visited.add(node)
+            leftNode = rightNode = None
+            
+            if node.right:
+                if node.right not in visited:
+                    rightNode = dfs(node.right)
+                else:
+                    return None
+            if node.left:
+                if node.left not in visited:
+                    leftNode = dfs(node.left)
+
+            node.left = leftNode
+            node.right = rightNode
+            return node
+        
+        newRoot = dfs(root)
+        return newRoot
