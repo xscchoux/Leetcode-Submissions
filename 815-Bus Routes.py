@@ -27,3 +27,35 @@ class Solution(object):
                         queue.append((nxtStop, count+1))
         
         return -1
+
+# Use set
+class Solution:
+    def numBusesToDestination(self, routes: List[List[int]], source: int, target: int) -> int:
+        graph = defaultdict(set)
+        
+        for idx, route in enumerate(routes):
+            for stop in route:
+                graph[stop].add(idx)
+            
+        
+        S = set([source])
+        T = set([target])
+        change = 0
+        visited = set() # store the index in route
+        
+        while S and T:
+            if S&T:
+                return change
+            if len(T) < len(S):
+                S, T = T, S
+            new_S = set()
+            for s in S:
+                for nxt_idx in graph[s]:
+                    if nxt_idx not in visited:
+                        visited.add(nxt_idx)
+                        for nxt in routes[nxt_idx]:
+                            new_S.add(nxt)
+            S = new_S - S
+            change += 1
+        
+        return -1
