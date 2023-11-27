@@ -43,3 +43,26 @@ class Solution(object):
             x1, x2, x3, x4, x5, x6, x7, x8, x9, x0 = newX1, newX2, newX3, newX4, newX5, newX6, newX7, newX8, newX9, newX0
         
         return (x1+x2+x3+x4+x5+x6+x7+x8+x9+x0)%kMod
+
+
+# Top-down, significant performance improvement can be achieved by moving the dp() function outside of the Solution class
+
+hmap = {0:[4, 6], 1:[6, 8], 2:[7, 9], 3:[4, 8], 4:[0, 3, 9], 5:[], 6:[0, 1, 7], 7:[2, 6], 8:[1, 3], 9:[2, 4]}
+kMod = 10**9+7
+
+@cache
+def dp(idx, num):
+    if idx == 1:
+        return 1
+    tot = 0
+    for nxt in hmap[num]:
+        tot = (tot + dp(idx-1, nxt))%kMod
+    return tot
+
+class Solution:
+    def knightDialer(self, n: int) -> int:
+        res = 0
+        for num in range(10):
+            res = (res + dp(n, int(num)))%kMod
+        
+        return res
