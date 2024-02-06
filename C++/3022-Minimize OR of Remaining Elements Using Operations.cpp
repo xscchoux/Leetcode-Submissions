@@ -1,42 +1,41 @@
-using LL = long long;
 class Solution {
 public:
     int minOrAfterOperations(vector<int>& nums, int k) {
-// From Huifeng Guan
-// https://github.com/wisdompeak/LeetCode/blob/master/Greedy/3022.Minimize-OR-of-Remaining-Elements-Using-Operations/3022.Minimize-OR-of-Remaining-Elements-Using-Operations.cpp
-
+        // https://github.com/wisdompeak/LeetCode/tree/master/Greedy/3022.Minimize-OR-of-Remaining-Elements-Using-Operations
         int N = nums.size();
-        LL res = 0;
         vector<int> arr(N);
-        
-        for (int t=30; ~t; t--) {
-            for (int i=0; i<N; i++) arr[i] = 2*arr[i] + ((nums[i]>>t)&1);
-                    
-            if(checkOK(arr, k)) {
-                res = 2*res;
+        int res = 0;
+        for (int i=30; ~i; i--) {
+            for (int j=0; j<N; j++) {
+                arr[j] = arr[j]*2 + ((nums[j]>>i)&1);
+            }
+            if (canErase(arr, k)) {
+                res = res*2;
             } else {
-                for (int i=0; i<N; i++){
-                    arr[i] >>= 1;
+                for (int j=0; j<N; j++) {
+                    arr[j] >>= 1;
                 }
-                res = 2*res+1;
+                res = res*2 + 1;
             }
         }
         return res;
     }
-    bool checkOK(vector<int>&arr, int k) {
-        int N = arr.size();
-        int count = 0;
-        for (int i=0;i<N;) {
+    
+    bool canErase(vector<int>& arr, int k) {   
+        int count = 0, N = arr.size();
+        // count determines the number of operations needed to make bitwise OR of arr zero in the ith bit 
+        for (int i=0; i<N; ){
             int curr = arr[i];
             int j = i;
-            while (curr!=0) {
-                j++;
+            while (curr != 0) {
                 count++;
-                if (j == N ) break;
+                j++;
+                if (j == N) break;
                 curr = curr&arr[j];
             }
             i = j+1;
         }
-        return (count!=N && count<=k);
+
+        return count<=k;
     }
 };
