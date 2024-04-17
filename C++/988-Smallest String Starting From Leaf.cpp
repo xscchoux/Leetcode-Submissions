@@ -26,3 +26,32 @@ public:
         return s;
     }
 };
+
+// BFS
+class Solution {
+public:
+    string smallestFromLeaf(TreeNode* root) {
+        string res = "";
+        queue<pair<TreeNode*, string>> q;
+        q.push({root, ""});
+        
+        while (!q.empty()) {
+            auto [node, s] = q.front();
+            q.pop();
+            if (node->left == nullptr && node->right == nullptr) {
+                if (res.empty()) {
+                    res = string(1, node->val + 'a')+s;
+                } else {
+                    res = min(res, string(1, node->val + 'a')+s);
+                }
+            }
+            if (node->left) {
+                q.push({node->left, string(1, node->val + 'a')+s});
+            }
+            if (node->right) {
+                q.push({node->right, string(1, node->val + 'a')+s});
+            }
+        }
+        return res;
+    }
+};
