@@ -2,26 +2,18 @@ class Solution {
 public:
     int minAbsDifference(vector<int>& nums, int goal) {
         int N = nums.size(), n = N/2, res = INT_MAX;
-        vector<int> leftVal, rightVal;
+        vector<int> leftVal = {0}, rightVal = {0};
 
-        for (int state=0; state<(1<<n); state++) {
-            int cnt = 0, leftSum = 0;
-            for (int i=0; i<n; i++) {
-                if ((state>>i) & 1) {
-                    leftSum += nums[i];
-                }
+        for (int i=0; i<n; i++) {
+            for (int j=0, sz=leftVal.size(); j<sz; j++) {
+                leftVal.push_back(leftVal[j]+nums[i]);
             }
-            leftVal.push_back(leftSum);
         }
 
-        for (int state=0; state<(1<<(N-n)); state++) {
-            int cnt = 0, rightSum = 0;
-            for (int i=0; i<(N-n); i++) {
-                if ((state>>i) & 1) {
-                    rightSum += nums[n+i];
-                }
+        for (int i=n; i<N; i++) {
+            for (int j=0, sz=rightVal.size(); j<sz; j++) {
+                rightVal.push_back(rightVal[j]+nums[i]);
             }
-            rightVal.push_back(rightSum);
         }
 
         sort(rightVal.begin(), rightVal.end());
