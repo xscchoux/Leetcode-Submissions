@@ -34,3 +34,41 @@ public:
         return cal(graph, nums[0]).first;
     }
 };
+
+
+// Redo. A faster approach
+using PII = pair<int, int>;
+class Solution {
+public:
+    pair<int, int> cal(int depth, int pos, unordered_map<int, int>& lookup) {
+        int tot = 0;
+        int depthPos = depth*10 + pos;
+        int nxtDepthPos1 = (depth+1)*10 + 2*pos-1, nxtDepthPos2 = (depth+1)*10 + 2*pos;
+        int cnt = 0;
+
+        if (lookup.contains(nxtDepthPos1)) {
+            const auto& [branches, val] = cal(depth+1, 2*pos-1, lookup);
+            cnt += branches;
+            tot += val;
+        }
+        if (lookup.contains(nxtDepthPos2)) {
+            const auto& [branches, val] = cal(depth+1, 2*pos, lookup);
+            cnt += branches;
+            tot += val;
+        }
+
+        cnt = cnt==0?1:cnt;
+
+        tot += lookup[depthPos]*cnt;
+        return {cnt, tot};
+    }
+    int pathSum(vector<int>& nums) {
+        unordered_map<int, int> lookup;
+        for (int num:nums) {
+            int v = num%10, depthPos = num/10;
+            lookup[depthPos] = v;
+        }
+
+        return cal(1, 1, lookup).second;
+    }
+};
