@@ -31,3 +31,39 @@ public:
         return true;
     }
 };
+
+
+// O(nlogn) solution by myself
+class Solution {
+public:
+    bool canSortArray(vector<int>& nums) {
+        int groupNum = 0;
+        unordered_map<int, int> mapping; // index: groupNumber
+        int preBitCount = 0;
+
+        for (int i=0; i<nums.size(); i++) {
+            int currBitCount = __builtin_popcount(nums[i]);
+            if (currBitCount == preBitCount) {
+                mapping[i] = groupNum;
+            } else {
+                mapping[i] = ++groupNum;
+                preBitCount = currBitCount;
+            }   
+        }
+
+        vector<pair<int, int>> sortedNum;
+        for (int i=0; i<nums.size(); i++) {
+            sortedNum.push_back({nums[i], i});
+        }
+
+        sort(sortedNum.begin(), sortedNum.end());
+
+        for (int i=0; i<nums.size(); i++) {
+            if (mapping[i] != mapping[sortedNum[i].second]) {
+                return false;
+            }
+        }
+
+        return true;
+    }
+};
