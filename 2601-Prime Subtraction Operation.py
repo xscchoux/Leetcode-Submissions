@@ -28,3 +28,31 @@ class Solution:
             prev = nums[i]
             
         return True
+
+
+
+# Redo, much faster, only 3ms
+prime = []
+def getPrimes():
+    primes = [True]*1001
+    for i in range(2, 1001):
+        if not primes[i]:
+            continue
+        for curr in range(i+i, 1001, i):
+            primes[curr] = False
+    for i in range(2, 1001):
+        if primes[i]:
+            prime.append(i)
+getPrimes()
+class Solution:
+    def primeSubOperation(self, nums: List[int]) -> bool:
+        prev = 0
+        for i in range(len(nums)):
+            if nums[i] <= prev:
+                return False
+            idx = bisect_left(prime, nums[i]-prev)
+            if idx > 0:
+                idx -= 1
+                nums[i] -= prime[idx]
+            prev = nums[i]
+        return True
