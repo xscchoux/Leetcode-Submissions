@@ -40,3 +40,30 @@ public:
         return true;        
     }
 };
+
+
+
+// O(n), clever line sweep solution, kinda hard
+class Solution {
+public:
+    int minZeroArray(vector<int>& nums, vector<vector<int>>& queries) {
+        int N = nums.size(), curr = 0, k = 0;
+        vector<int> diff(N+1, 0);
+
+        for (int i=0; i<N; i++) {
+            while (diff[i] + curr + nums[i] > 0) {
+                k++;
+                if (k > queries.size()) return -1;
+
+                int left = queries[k-1][0], right = queries[k-1][1], val = queries[k-1][2];
+                if (right >= i) {
+                    diff[max(left, i)] -= val;
+                    diff[right+1] += val; 
+                }
+            }
+            curr += diff[i];
+        }
+
+        return k;
+    }
+};
