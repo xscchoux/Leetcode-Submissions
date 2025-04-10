@@ -29,3 +29,55 @@ public:
         return res;
     }
 };
+
+// digit DP
+using LL = long long;
+class Solution {
+public:
+    string suffix;
+    int limit, N;
+    LL dp[16][2];
+    long long count(int idx, string& largest, int upper) {  // upper == 1: reach limit
+        if (largest.size() < suffix.size()) {
+            return 0;
+        }
+        if (idx == largest.size() - suffix.size()) {
+            if (upper == 1) {
+                if (stol(suffix) > stol(largest.substr(idx)) ) {
+                    return 0;
+                } else {
+                    return 1;
+                }
+            }
+            return 1;
+        }
+
+        if (dp[idx][upper] != -1) return dp[idx][upper];
+
+        LL tot = 0;
+        if (upper == 1) {
+            tot += (min(limit, largest[idx] - '0'))*count(idx+1, largest, 0);
+            if (limit >= largest[idx]-'0') {
+                tot += count(idx+1, largest, 1);
+            } else {
+                tot += count(idx+1, largest, 0);
+            }
+        } else {
+            tot += count(idx+1, largest, 0)*(limit+1);
+        }
+
+        return dp[idx][upper] = tot;
+    }
+    long long numberOfPowerfulInt(long long start, long long finish, int limit, string s) {
+        this->suffix = s;
+        this->limit = limit;
+        N = s.size();
+        memset(dp, -1, sizeof(dp));
+        string startString = to_string(start-1), finishString = to_string(finish); 
+        LL upper = count(0, finishString, 1);
+        memset(dp, -1, sizeof(dp));
+        LL lower = count(0, startString, 1);
+
+        return upper-lower;
+    }
+};
