@@ -30,3 +30,25 @@ public:
         
     }
 };
+
+
+// Second visit, much simpler
+class Solution {
+public:
+    long long countSubarrays(vector<int>& nums, int k) {
+        long long res = 0;
+        int left = 0, maxCnt = 0, mx = *max_element(begin(nums), end(nums));
+
+        for (int i=0; i<nums.size(); i++) {
+            if (nums[i] == mx) maxCnt++;
+            while ((maxCnt == k && nums[left] != mx) || maxCnt > k) {
+                if (nums[left++] == mx) maxCnt--;
+            }
+            if (maxCnt == k) {
+                res += left+1;
+            }
+        }
+
+        return res;
+    }
+};
