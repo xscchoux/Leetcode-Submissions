@@ -38,3 +38,49 @@ public:
         return res;
     }
 };
+
+
+
+// second visit
+class Solution {
+public:
+    int maxCandies(vector<int>& status, vector<int>& candies, vector<vector<int>>& keys, vector<vector<int>>& containedBoxes, vector<int>& initialBoxes) {
+        int N = status.size(), res = 0;
+        queue<int> q, locked;  // available boxes, locked boxes
+        for (int b:initialBoxes) {
+            if (status[b] == 1) q.push(b);
+            else locked.push(b);
+        }
+
+        while (!q.empty()) {
+            int sz = q.size();
+            while (sz-- > 0) {
+                int curr = q.front();
+                q.pop();
+                res += candies[curr];
+
+                for (int key:keys[curr]) {
+                    status[key] = 1;
+                }
+                
+                for (int nxt:containedBoxes[curr]) {
+                    if (status[nxt] == 1) q.push(nxt);
+                    else locked.push(nxt);
+                }
+            }
+
+            int szLocked = locked.size();
+            while (szLocked-- > 0) {
+                int curr = locked.front();
+                locked.pop();
+                if (status[curr] == 0) {
+                    locked.push(curr);
+                } else {
+                    q.push(curr);
+                }
+            }
+        }
+
+        return res;
+    }
+};
