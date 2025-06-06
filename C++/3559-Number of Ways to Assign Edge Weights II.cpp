@@ -15,9 +15,9 @@ public:
 
     // for each node, get binaryLifting[curr][1~maxPower]
     void build(vector<vector<int>>& binaryLifting) {
-        for (int curr=1; curr<=N; curr++) {
-            for (int power=1; power<=maxPower; power++) {
-                if (binaryLifting[curr][power-1] == -1) break;
+        for (int power=1; power<=maxPower; power++) {
+            for (int curr=1; curr<=N; curr++) {
+                if (binaryLifting[curr][power-1] == -1) continue;
                 binaryLifting[curr][power] = binaryLifting[binaryLifting[curr][power-1]][power-1];
             }
         }
