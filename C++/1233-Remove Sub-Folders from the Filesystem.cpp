@@ -46,3 +46,23 @@ public:
         return res;
     }
 };
+
+
+
+// clever and fast solution using string::compare()
+class Solution {
+public:
+    vector<string> removeSubfolders(vector<string>& folder) {
+        sort(begin(folder), end(folder));
+        vector<string> res;
+
+        for (string &s:folder) {
+            if (res.empty() || s.compare(0, res.back().size(), res.back())!= 0 || s[res.back().size()] != '/') {
+                // s[res.back().size()] != '/' is used for this case : ["/a/b/c","/a/b/ca"]
+                res.push_back(s);
+            }
+        }
+
+        return res;
+    }
+};
