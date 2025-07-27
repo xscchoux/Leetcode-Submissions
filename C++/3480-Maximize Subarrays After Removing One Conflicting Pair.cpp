@@ -72,3 +72,73 @@ public:
         return res + *max_element(begin(removes), end(removes));
     }
 };
+
+
+
+// revisit, another solution
+// https://leetcode.cn/problems/maximize-subarrays-after-removing-one-conflicting-pair/solutions/3603047/mei-ju-zuo-duan-dian-wei-hu-zui-xiao-ci-4nvu6/
+// O(nlogn)
+class Solution {
+public:
+    long long maxSubarrays(int n, vector<vector<int>>& conflictingPairs) {
+        vector<vector<int>> groups(n+1); // group[a] = {b1, b2,...}, a is start point and b1, b2 are end points
+        for (auto &p:conflictingPairs) {
+            if (p[0] > p[1]) {
+                swap(p[0], p[1]);
+            }
+            int a = p[0], b = p[1];
+            groups[a].push_back(b);
+        }
+
+        vector<int> endPoints = {n+1, n+1};
+        vector<long long> extraLength(n+2, 0);
+        long long res = 0;
+
+        for (int start=n; start>=1; start--) {
+            endPoints.insert(end(endPoints), begin(groups[start]), end(groups[start]));
+            sort(begin(endPoints), end(endPoints));
+            endPoints.resize(2);
+
+            res += endPoints[0] - start;
+            extraLength[endPoints[0]] += endPoints[1] - endPoints[0];
+        }
+
+        return res + *max_element(begin(extraLength), end(extraLength));
+    }
+};
+
+
+// O(n), without sorting
+class Solution {
+public:
+    long long maxSubarrays(int n, vector<vector<int>>& conflictingPairs) {
+        vector<vector<int>> groups(n+1); // group[a] = {b1, b2,...}, a is start point and b1, b2 are end points
+        for (auto &p:conflictingPairs) {
+            if (p[0] > p[1]) {
+                swap(p[0], p[1]);
+            }
+            int a = p[0], b = p[1];
+            groups[a].push_back(b);
+        }
+
+        int endPoint1 = n+1, endPoint2 = n+1;
+        vector<long long> extraLength(n+2, 0);
+        long long res = 0;
+
+        for (int start=n; start>=1; start--) {
+            for (int end:groups[start]) {
+                if (end < endPoint1) {
+                    endPoint2 = endPoint1;
+                    endPoint1 = end;
+                } else if (end < endPoint2) {
+                    endPoint2 = end;
+                }
+            }
+
+            res += endPoint1 - start;
+            extraLength[endPoint1] += endPoint2 - endPoint1;
+        }
+
+        return res + *max_element(begin(extraLength), end(extraLength));
+    }
+};
