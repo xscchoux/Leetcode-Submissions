@@ -1,3 +1,45 @@
+// O(n^(3/2)), square root decomposition
+// https://leetcode.com/problems/fruits-into-baskets-iii/editorial/
+class Solution {
+public:
+    int numOfUnplacedFruits(vector<int>& fruits, vector<int>& baskets) {
+        int N = baskets.size(), blockLen = sqrt(N);
+        int blockCnt = (N+blockLen-1)/blockLen;
+        vector<int> maxV(blockCnt);
+
+        for (int i=0; i<N; i++) {
+            maxV[i/blockLen] = max(maxV[i/blockLen], baskets[i]);
+        }
+
+        int res = 0;
+
+        for (int fruit:fruits) {
+            bool picked = false;
+            for (int block=0; block < blockCnt; block++) {
+                if (maxV[block] < fruit) continue;
+                maxV[block] = 0;
+                for (int i=0; i<blockLen; i++) {
+                    int idx = block*blockLen + i;
+                    if (idx < N && baskets[idx] >= fruit && !picked) {
+                        baskets[idx] = 0;
+                        picked = true;
+                    }
+                    if (idx < N) {
+                        maxV[block] = max(maxV[block], baskets[idx]);
+                    }
+                }
+                if (picked) {
+                    break;
+                }
+            }
+            if (!picked) res++;
+        }
+
+        return res;
+    }
+};
+
+
 // O(N*logN*logN)
 class SGTree {
 	vector<int> seg;
