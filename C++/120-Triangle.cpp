@@ -19,3 +19,20 @@ public:
         return dfs(0, 0, triangle, memo);
     }
 };
+
+// Bottom-up DP (tricky)
+class Solution {
+public:
+    int minimumTotal(vector<vector<int>>& triangle) {
+        int N = triangle.size();
+        vector<int> dp(N+1, 0);
+
+        for (int r=N-1; r>=0; r--) {
+            for (int c=0; c<triangle[r].size(); c++) {
+                dp[c] = min(dp[c], dp[c+1]) + triangle[r][c];
+            }
+        }
+
+        return dp[0];
+    }
+};
