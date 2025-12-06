@@ -64,3 +64,31 @@ public:
         return dp.back();
     }
 };
+
+
+// Redo
+class Solution {
+public:
+    int countPartitions(vector<int>& nums, int k) {
+        int N = nums.size();
+        vector<int> preSum(N+1, 0), dp(N+1, 0);
+        preSum[0] = 1;
+        dp[0] = 1;
+        multiset<int> ms;
+        int left = 0, res = 0, kMod = 1e9+7;
+
+        for (int i=0; i<N; i++) {
+            ms.insert(nums[i]);
+            while (*ms.rbegin() - *ms.begin() > k) {
+                ms.erase(ms.find(nums[left]));
+                left++;
+            }
+            // dp[i] = dp[i-1] + dp[i-2] + ... + dp[left-1]
+            //       = preSum[i-1] - preSum[left-2]
+            dp[i+1] = (preSum[i] - (left-1<0?0:preSum[left-1]) + kMod)%kMod;        
+            preSum[i+1] = (preSum[i] + dp[i+1])%kMod;
+        }
+
+        return dp[N];
+    }
+};
