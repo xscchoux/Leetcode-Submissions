@@ -85,3 +85,37 @@ public:
         return res;
     }
 };
+
+
+
+// Redo
+class Solution {
+public:
+    int minFlips(string s) {
+        int N = s.size(), flip = 0, res = N;
+
+        // 101010...
+        for (int i=0; i<(2*N-1); i++) {
+            int idx = i%N;
+            
+            // even index:1, odd index:0
+            if (i%2) {
+                flip += (s[idx] == '0'?0:1);
+            } else {
+                flip += (s[idx] == '1'?0:1);
+            }
+
+            // deal with s[i-N]
+            if (i >=N) {
+                if ( !((i-N)%2^s[i-N] == '1') ) {
+                    flip--;
+                }
+            }
+          
+            if (i >= N-1) {
+                res = min(res, min(flip, N-flip));
+            }
+        }
+        return res;
+    }
+};
