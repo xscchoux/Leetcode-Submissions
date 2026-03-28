@@ -78,3 +78,100 @@ public:
  * MRUQueue* obj = new MRUQueue(n);
  * int param_1 = obj->fetch(k);
  */
+
+
+
+// Redo, use segment tree
+class SGTree {
+    vector<int> seg;
+public:
+    SGTree(int n) {
+        seg.resize(4 * n + 1, 0);
+    }
+
+    void build(int ind, int low, int high, vector<int>& arr) {
+        if (low == high) {
+            seg[ind] = arr[low];
+            return;
+        }
+
+        int mid = low + (high - low) / 2;
+        build(2 * ind + 1, low, mid, arr);
+        build(2 * ind + 2, mid + 1, high, arr);
+        seg[ind] = seg[2 * ind + 1] + seg[2 * ind + 2];
+    }
+
+    int query(int ind, int low, int high, int l, int r) {
+        // no overlap
+        // l r low high or low high l r
+        if (r < low || high < l) return 0;
+
+        // complete overlap
+        // [l low high r]
+        if (low >= l && high <= r) return seg[ind];
+
+        int mid = low + (high - low) / 2;
+        int left = query(2 * ind + 1, low, mid, l, r);
+        int right = query(2 * ind + 2, mid + 1, high, l, r);
+        return (left + right);
+    }
+
+    void update(int ind, int low, int high, int i, int val) {
+        if (low == high) {
+            seg[ind] = val;
+            return;
+        }
+
+        int mid = low + (high - low) / 2;
+        if (i <= mid) update(2 * ind + 1, low, mid, i, val);
+        else update(2 * ind + 2, mid + 1, high, i, val);
+        seg[ind] = seg[2 * ind + 1] + seg[2 * ind + 2];
+    }
+};
+
+
+// Note the way we initialize sgt
+class MRUQueue {
+public:
+    vector<int> arr;
+    SGTree sgt;
+    int n;
+    MRUQueue(int n) : sgt(n+2000){
+        this->n = n;
+        for (int i=1; i<=n; i++) {
+            arr.push_back(i);
+        }
+        // sgt = new SGTree(n+2000);
+    }
+    
+    int fetch(int k) {
+        int left = 0, right = arr.size() - 1;
+        // find the (k-1)th index
+        while (left + 1 < right) {
+            int mid = left + (right-left)/2;
+            if (mid - sgt.query(0, 0, n+2000, 0, mid) >= k-1) {
+                right = mid;
+            } else {
+                left = mid;
+            }
+        }
+
+        int idx;
+        if (left - sgt.query(0, 0, n+2000, 0, left) >= k-1) {
+            idx = left;
+        } else {
+            idx = right;
+        }
+        
+        sgt.update(0, 0, n+2000, idx, 1);
+        arr.push_back(arr[idx]);
+
+        return arr[idx];
+    }
+};
+
+/**
+ * Your MRUQueue object will be instantiated and called as such:
+ * MRUQueue* obj = new MRUQueue(n);
+ * int param_1 = obj->fetch(k);
+ */
