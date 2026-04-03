@@ -42,3 +42,46 @@ public:
         return max(dp[N-1][0], dp[N-1][1]);
     }
 };
+
+
+
+// Redo, slightly different but not speed is almost the same, no need to substract the overlapped
+class Solution {
+public:
+    int maxWalls(vector<int>& robots, vector<int>& distance, vector<int>& walls) {
+        sort(begin(walls), end(walls));
+        vector<array<int, 2>> arr;
+        int N = robots.size();
+        for (int i=0; i<N; i++) {
+            arr.push_back({robots[i], distance[i]});
+        }
+        arr.push_back({1000000001, 0});
+        sort(begin(arr), end(arr));
+
+
+        auto count = [&](int left, int right) {
+            auto it1 = lower_bound(begin(walls), end(walls), left);
+            auto it2 = upper_bound(begin(walls), end(walls), right);
+            return (int)(it2 - it1);
+        };
+
+        vector<vector<int>> dp(N, vector<int>(2, 0));
+
+        dp[0][0] = count(arr[0][0] - arr[0][1], arr[0][0]);
+        if (N > 1) {
+            dp[0][1] = count(arr[0][0], min(arr[0][0] + arr[0][1], arr[1][0]-1) );
+        } else {
+            dp[0][1] = count(arr[0][0], arr[0][0] + arr[0][1]);
+        }
+
+        for (int i=1; i<N; i++) {
+            dp[i][1] = max(dp[i-1][0], dp[i-1][1]) + count(arr[i][0], min(arr[i][0] + arr[i][1], arr[i+1][0]-1));
+
+            dp[i][0] = dp[i-1][0] + count(max(arr[i][0] - arr[i][1], arr[i-1][0] + 1), arr[i][0]);
+            dp[i][0] = max(dp[i][0], dp[i-1][1] + count(max(min(arr[i-1][0] + arr[i-1][1], arr[i][0]-1)+1, arr[i][0] - arr[i][1]) , arr[i][0]));
+        }
+
+        return max(dp[N-1][0], dp[N-1][1]);
+
+    }
+};
