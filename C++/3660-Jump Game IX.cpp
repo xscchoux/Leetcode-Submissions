@@ -29,3 +29,41 @@ public:
         return res;
     }
 };
+
+
+
+// monotonically increasing stack, very tricky and hard to come up with
+class Solution {
+public:
+    struct Item {
+        int maxVal;  // max value this connected component (nums[left]~nums[right]) can reach
+        int left;
+        int right;
+    };
+    vector<int> maxValue(vector<int>& nums) {
+        int N = nums.size();
+        vector<Item> stk;
+
+        for (int i=0; i<N; i++) {
+            Item curr = {nums[i], i, i};
+
+            while (!stk.empty() && stk.back().maxVal > nums[i]) {
+                Item tmp = stk.back();
+                stk.pop_back();
+                curr.left = tmp.left;
+                curr.maxVal = max(curr.maxVal, tmp.maxVal);
+            }
+
+            stk.push_back(curr);
+        }
+
+        vector<int> res;
+        for (int i=0; i<stk.size(); i++) {
+            for (int idx = stk[i].left; idx<=stk[i].right; idx++) {
+                res.push_back(stk[i].maxVal);
+            }
+        }
+        
+        return res;
+    }
+};
