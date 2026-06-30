@@ -35,16 +35,17 @@ public:
 
 
         // T:
-        // ............... 0
-        //                 1 0
-        //                 1 1 0
-        //                 ...
-        //                 1 1 1 .. 1 1 0
-        // 1 1 1 .. 1 1 0  ...........
+        // ............... 0 0 0 .. 0 0 0
+        //                 0 0 1 .. 1 1 1
+        //                 ...               
+        //                 0 0 0 .. 0 0 1 
+        //                 0 0 0 .. 0 0 0
+        // 0 0 0 .. 0 0 0  ...........
+        // 0 0 0 .. 0 0 0  ...........
+        // 0 1 0 .. 0 0 0  ...........
         // ...
-        // 1 1 0
-        // 1 0
-        // 0
+        // 0 1 1 .. 1 0 0
+        // 0 1 1 .. 1 1 0
 
         // initial result (vector)
         // up[0] = 1
@@ -57,14 +58,14 @@ public:
 
         // We want to get T^(n-1) * (initial result)
 
-        // fill T for up values
+        // fill the up->down part
         for (int curr=1; curr<=diff; curr++) {
             for (int c=1; c<curr; c++) {
                 T[diff+1+curr][c] = 1;
             }
         }
 
-        // fill T for down values
+        // fill the down->up part
         for (int curr=1; curr<=diff; curr++) {
             for (int c=diff; c>curr; c--) {
                 T[curr][diff+1+c] = 1;
