@@ -1,3 +1,4 @@
+// Dijkstra
 using TII = tuple<int, int, int>;
 class Solution {
 public:
@@ -25,5 +26,47 @@ public:
             } 
         }
         return false;
+    }
+};
+
+
+
+// 0-1 BFS
+class Solution {
+public:
+    int d[5] = {1, 0, -1, 0, 1};
+    bool findSafeWalk(vector<vector<int>>& grid, int health) {
+        int row = grid.size(), col = grid[0].size();
+        deque<array<int, 3>> dq;
+        vector<vector<int>> minCost(row, vector<int>(col, INT_MAX));
+        if (health - grid[0][0] <= 0) return false;
+
+        dq.push_back({grid[0][0], 0, 0});
+
+        while (!dq.empty()) {
+            auto [cost, r, c] = dq.front();
+            dq.pop_front();
+
+            if (cost >= health || cost >= minCost[r][c]) {
+                continue;
+            }
+            if (r == row-1 && c == col-1) {
+                return true;
+            }
+            minCost[r][c] = cost;
+
+            for (int i=0; i<4; i++) {
+                int nr = r + d[i], nc = c + d[i+1];
+                if (nr>=0 && nr<row && nc>=0 && nc<col && minCost[r][c] + grid[nr][nc] < minCost[nr][nc]) {
+                    if (grid[nr][nc] == 1) {
+                        dq.push_back({cost+1, nr, nc});
+                    } else {
+                        dq.push_front({cost, nr, nc});
+                    }
+                }
+            }
+        }
+
+        return false;    
     }
 };
