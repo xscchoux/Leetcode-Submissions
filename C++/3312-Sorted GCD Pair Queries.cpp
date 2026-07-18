@@ -58,3 +58,53 @@ public:
 };
 
 vector<vector<int>> Solution::divisors;
+
+
+
+// Clever and much faster
+using LL = long long;
+class Solution {
+public:
+    vector<int> gcdValues(vector<int>& nums, vector<long long>& queries) {
+        int N = nums.size();
+        int mx = *max_element(begin(nums), end(nums));
+        vector<LL> cnt(mx+1, 0);
+
+        // cnt is a counter
+        for (int num:nums) {
+            cnt[num]++;
+        }
+
+        // cnt[num] gives the count of num and the multiples of num
+        for (int i=1; i<=mx; i++) {
+            for (int j=2*i; j<=mx; j+=i) {
+                cnt[i] += cnt[j];
+            }
+        }
+
+        // cnt[num] gives the count of pairs where the gcd can be divided by num
+        for (int i=1; i<=mx; i++) {
+            cnt[i] = cnt[i]*(cnt[i]-1)/2;
+        }
+
+        // cnt[num] gives the count of pairs where the gcd is exactly num
+        for (int i=mx; i>=1; i--) {
+            for (int j=2*i; j<=mx; j+=i) {
+                cnt[i] -= cnt[j];
+            }
+        }
+
+        // prefix sum
+        for (int i=1; i<=mx; i++) {
+            cnt[i] += cnt[i-1];
+        }
+
+        vector<int> res;
+        for (LL q:queries) {
+            int index = lower_bound(begin(cnt), end(cnt), q+1) - begin(cnt);
+            res.push_back(index);
+        }
+
+        return res;
+    }
+};
