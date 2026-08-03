@@ -24,3 +24,25 @@ public:
         return dfs(0, blocks, split, 1, memo);
     }
 };
+
+// priority queue, very hard to come up with
+class Solution {
+public:
+    int minBuildTime(vector<int>& blocks, int split) {
+        priority_queue<int, vector<int>, greater<>> pq;
+
+        for (int b:blocks) {
+            pq.push(b);
+        }
+
+        while (pq.size() > 1) {
+            int first = pq.top();
+            pq.pop();
+            int second = pq.top();
+            pq.pop();
+            pq.push(split + max(first, second));
+        }
+
+        return pq.top();
+    }
+};
