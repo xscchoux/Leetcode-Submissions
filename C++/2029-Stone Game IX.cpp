@@ -40,3 +40,36 @@ public:
         return false;
     }
 };
+
+
+
+// https://leetcode.cn/problems/stone-game-ix/solutions/1029063/guan-jian-zai-yu-qiu-chu-hui-he-shu-by-e-mcgv/
+class Solution {
+public:
+    int N;
+    bool check(vector<int> cnt) {
+        if (cnt[1] == 0) {
+            return false;
+        }
+
+        cnt[1]--;
+        int rounds = 1 + min(cnt[1], cnt[2])*2 + cnt[0];
+        if (cnt[1] > cnt[2]) {
+            rounds++;
+        }
+
+        return rounds < N && rounds%2 == 1;
+    }
+    bool stoneGameIX(vector<int>& stones) {
+        this->N = stones.size();
+        vector<int> cnt(3, 0);
+        for (int stone:stones) {
+            cnt[stone%3]++;
+        }
+
+        vector<int> cnt2 = {cnt[0], cnt[2], cnt[1]};
+
+        return check(cnt) || check(cnt2);
+
+    }
+};
