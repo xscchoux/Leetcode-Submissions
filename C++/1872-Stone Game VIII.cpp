@@ -48,3 +48,35 @@ public:
         return dfs(preSum, 2, memo);
     }
 };
+
+
+
+// Redo. Set skip = dfs(preSum, idx+1, memo) to avoid function call overhead
+class Solution {
+public:
+    int N;
+    int dfs(vector<int>& preSum, int idx, vector<int>& memo) {
+        if (idx == N-1) {
+            return preSum[N];
+        }
+        if (memo[idx] != -1) {
+            return memo[idx];
+        }
+        int skip = dfs(preSum, idx+1, memo);
+        int take = max(skip, preSum[idx+1] - skip);
+
+        return memo[idx] = max(skip, take);
+    }
+    int stoneGameVIII(vector<int>& stones) {
+        this->N = stones.size();
+
+        vector<int> preSum(N+1, 0);
+        for (int i=0; i<N; i++) {
+            preSum[i+1] = preSum[i] + stones[i];
+        }
+
+        vector<int> memo(N, -1);
+
+        return dfs(preSum, 1, memo);
+    }
+};
