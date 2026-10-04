@@ -60,3 +60,42 @@ public:
         return true;
     }
 };
+
+
+
+// two stacks
+class Solution {
+public:
+    bool checkValidString(string s) {
+        int N = s.size();
+        stack<int> left, asterisks;
+
+        for (int i=0; i<N; i++) {
+            if (s[i] == '(') {
+                left.push(i);
+            } else if (s[i] == '*') {
+                asterisks.push(i);
+            } else {
+                if (!left.empty()) {
+                    left.pop();
+                } else if (!asterisks.empty()) {
+                    asterisks.pop();
+                } else {
+                    return false;
+                }
+            }
+        }
+
+        while (!left.empty()) {
+            int idx = left.top();
+            if (!asterisks.empty() && idx < asterisks.top()) {
+                left.pop();
+                asterisks.pop();
+            } else {
+                return false;
+            }
+        }
+
+        return true;
+    }
+};
