@@ -39,3 +39,56 @@ public:
         return (res == INT_MAX/2)?-1:res;
     }
 };
+
+
+
+// Redo, faster Dijkstra solution
+class Solution {
+public:
+    int minimumCost(int n, vector<vector<int>>& highways, int discounts) {
+        priority_queue<array<int, 3>, vector<array<int, 3>>, greater<>> pq;
+
+        vector<vector<pair<int, int>>> graph(n);
+        for (auto &h:highways) {
+            int u = h[0], v = h[1], w = h[2];
+            graph[u].push_back({v, w});
+            graph[v].push_back({u, w});
+        }
+
+        pq.push({0, 0, 0});  // distance, used discounts, index
+        
+        vector<vector<int>> dist(n, vector<int>(discounts+1, INT_MAX/2));
+        dist[0][0] = 0;
+        
+        int res = INT_MAX;
+
+        while (!pq.empty()) {
+            auto [d, used, curr] = pq.top();
+            pq.pop();
+
+            if (d > dist[curr][used]) continue;
+
+            if (curr == n-1) {
+                return d;
+            }
+
+            dist[curr][used] = d;
+
+            for (auto &[nxt, weight]:graph[curr]) {
+                // use discount
+                if (used < discounts && d + weight/2 < dist[nxt][used+1]) {
+                    dist[nxt][used+1] = d + weight/2;
+                    pq.push({d+weight/2, used+1, nxt});
+                }
+                if (d + weight < dist[nxt][used]) {
+                    dist[nxt][used] = d + weight;
+                    pq.push({d+weight, used, nxt});
+                }
+                
+            }
+
+        }
+
+        return res == INT_MAX?-1:res;
+    }
+};
