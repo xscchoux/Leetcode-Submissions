@@ -39,3 +39,48 @@ public:
         return res;
     }
 };
+
+
+
+// Redo
+using LL = long long;
+class Solution {
+public:
+    vector<string> res;
+    void getCIDR(long long ipAddr, int prefixLen) {
+        string ipStr = "";
+        for (int i=0; i<4; i++) {
+            ipStr = to_string(ipAddr%256) + '.' + ipStr;
+            ipAddr /= 256;
+        }
+        ipStr.pop_back();
+        ipStr = ipStr + '/' + to_string(prefixLen);
+        res.push_back(ipStr);
+    }
+    vector<string> ipToCIDR(string ip, int n) {
+        long long ipAddr = 0;
+        istringstream iss(ip);
+        string token;
+        while (getline(iss, token, '.')) {
+            ipAddr = ipAddr*256 + stoi(token);
+        }
+
+        while (n > 0) {
+            int lsb = ipAddr&(-ipAddr);  // Least Significant Bit, LSB
+            int range;                   // to be used
+
+            if (lsb == 0) {
+                // when ip address is zero
+                range = log2(n);
+            } else {
+                range = min(log2(lsb), log2(n));
+            }
+            getCIDR(ipAddr, 32-range);
+            ipAddr += pow(2, range);
+            n -= pow(2, range);
+
+        }
+
+        return res;
+    }
+};
