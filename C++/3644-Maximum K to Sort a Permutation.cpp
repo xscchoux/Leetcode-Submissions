@@ -28,3 +28,25 @@ public:
         return common;
     }
 };
+
+
+// Better
+class Solution {
+public:
+    int sortPermutation(vector<int>& nums) {
+        int N = nums.size(), res = (1<<18)-1;
+        bool found = false;   // found misplaced element
+        for (int i=0; i<N; i++) {
+            if (i != nums[i]) {
+                found = true;
+                res = res & nums[i];
+            }
+        }
+
+        if (!found) {
+            return 0;
+        }
+
+        return res;
+    }
+};
