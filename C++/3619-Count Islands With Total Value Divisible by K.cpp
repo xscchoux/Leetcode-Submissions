@@ -24,7 +24,7 @@ public:
         for (int r=0; r<row; r++) {
             for (int c=0; c<col; c++) {
                 if (grid[r][c] == 0 || visited[r][c]) continue;
-                int tot = dfs(r, c, grid, visited);
+                long long tot = dfs(r, c, grid, visited);
                 if (tot%k == 0) res++;
             }
         }
