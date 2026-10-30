@@ -75,3 +75,43 @@ public:
         return res == INT_MAX?-1:res;
     }
 };
+
+// Dijkstra2
+class Solution {
+public:
+    int shortestPath(int n, vector<vector<int>>& edges, string labels, int k) {
+        vector<vector<int>> dist(n, vector<int>(k+1, INT_MAX));
+        vector<vector<pair<int, int>>> graph(n);
+
+        for (auto &e:edges) {
+            graph[e[0]].push_back({e[1], e[2]});
+        }
+
+        priority_queue<array<int, 3>, vector<array<int, 3>>, greater<array<int, 3>>> pq;
+        dist[0][1] = 0;
+        pq.push({0, 0, 1});  // {total weight, current, node, count}
+
+        while (!pq.empty()) {
+            auto arr = pq.top();
+            pq.pop();
+            int d = arr[0], curr = arr[1], cnt = arr[2];
+
+            if (d > dist[curr][cnt]) continue;
+            
+            for (auto [nxt, w]:graph[curr]) {
+                int nxtCnt = (labels[curr] == labels[nxt])?cnt+1:1;
+                if (nxtCnt > k) continue;
+                if (d + w < dist[nxt][nxtCnt]) {
+                    dist[nxt][nxtCnt] = d+w;
+                    pq.push({d+w, nxt, nxtCnt});
+                }
+            }
+        }
+        int res = INT_MAX;
+        for (int kk = 1; kk<=k; kk++) {
+            res = min(res, dist[n-1][kk]);
+        }
+
+        return res == INT_MAX?-1:res;
+    }
+};
